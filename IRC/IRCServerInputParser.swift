@@ -37,6 +37,7 @@ enum IRCServerInput: Equatable {
     case ping
     case serverMessage(server: String, message: String)
     case channelMessage(channel: String, message: String)
+    case joinMessage(user: String, channel: String)
 }
 
 func ==(lhs: IRCServerInput, rhs: IRCServerInput) -> Bool{

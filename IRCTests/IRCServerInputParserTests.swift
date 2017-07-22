@@ -29,4 +29,9 @@ class IRCServerInputParserTests: XCTestCase {
         XCTAssertEqual(input, IRCServerInput.channelMessage(channel: "clearlynotarealchannel", message: "this is so cool"))
     }
     
+    func testJoinMessage() {
+        let input = IRCServerInputParser.parseServerMessage(":mukman!~sgoodwin@188.202.247.233 JOIN #clearlyatestchannel\r\n")
+        
+        XCTAssertEqual(input, IRCServerInput.joinMessage(user: "mukman", channel: "clearlyatestchannel"))
+    }
 }
