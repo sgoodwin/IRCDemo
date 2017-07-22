@@ -36,7 +36,21 @@ class ViewController: NSViewController, NSTextFieldDelegate {
                 return
             }
             
-            print(message)
+            let input = IRCServerInputParser.parseServerMessage(message)
+            switch input {
+                
+            case .unknown(let raw):
+                print("Unknown message! \(raw)")
+            case .ping:
+                self.send("PONG")
+            case .serverMessage(_, let message):
+                print(message)
+            case .channelMessage(let channel, let message):
+                print("\(channel): \(message)")
+            case .joinMessage(let user, let channel):
+                print("\(user) joined \(channel)")
+            }
+            
             self.read()
         }
     }
