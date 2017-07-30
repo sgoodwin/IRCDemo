@@ -67,7 +67,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     
     @IBAction func userTyped(_ sender: NSTextField) {
         send(sender.stringValue)
-        // send("JOIN :#clearlynotarealchannel")
     }
 }
 
