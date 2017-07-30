@@ -36,6 +36,8 @@ class ViewController: NSViewController, NSTextFieldDelegate {
                 return
             }
             
+            print(message)
+            
             let input = IRCServerInputParser.parseServerMessage(message)
             switch input {
                 
@@ -45,8 +47,8 @@ class ViewController: NSViewController, NSTextFieldDelegate {
                 self.send("PONG")
             case .serverMessage(_, let message):
                 print(message)
-            case .channelMessage(let channel, let message):
-                print("\(channel): \(message)")
+            case .channelMessage(let channel, let user, let message):
+                print("\(user)@\(channel): \(message)")
             case .joinMessage(let user, let channel):
                 print("\(user) joined \(channel)")
             }

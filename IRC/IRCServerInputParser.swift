@@ -15,16 +15,26 @@ struct IRCServerInputParser {
         }
         
         if message.hasPrefix(":") {
-            let split = message.components(separatedBy: ":")
-            return .serverMessage(server: split[1].components(separatedBy: " ")[0], message: split[2])
-        }
-        
-        if message.hasPrefix("PRIVMSG") {
-            let remaining = message.substring(from: message.index(message.startIndex, offsetBy: 8))
+            let firstSpaceIndex = message.index(of: " ")!
+            let source = message.substring(to: firstSpaceIndex)
+            let rest = message.substring(from: firstSpaceIndex).trimmingCharacters(in: .whitespacesAndNewlines)
+            print(source)
             
-            if remaining.hasPrefix("#") {
-                let split = remaining.components(separatedBy: ":")
-                return .channelMessage(channel: split[0].trimmingCharacters(in: CharacterSet(charactersIn: " #")), message: split[1])
+            if rest.hasPrefix("PRIVMSG") {
+                let remaining = rest.substring(from: rest.index(message.startIndex, offsetBy: 8))
+                
+                if remaining.hasPrefix("#") {
+                    let split = remaining.components(separatedBy: ":")
+                    let channel = split[0].trimmingCharacters(in: CharacterSet(charactersIn: " #"))
+                    let user = source.components(separatedBy: "!")[0].trimmingCharacters(in: CharacterSet(charactersIn: ":"))
+                    let message = split[1]
+                    
+                    return .channelMessage(channel: channel, user: user, message: message)
+                }
+            } else{
+                let server = source.trimmingCharacters(in: CharacterSet(charactersIn: ": "))
+                let message = rest.components(separatedBy: ":")[1]
+                return .serverMessage(server: server, message: message)
             }
         }
         
@@ -36,7 +46,7 @@ enum IRCServerInput: Equatable {
     case unknown(raw: String)
     case ping
     case serverMessage(server: String, message: String)
-    case channelMessage(channel: String, message: String)
+    case channelMessage(channel: String, user: String, message: String)
     case joinMessage(user: String, channel: String)
 }
 
@@ -44,9 +54,9 @@ func ==(lhs: IRCServerInput, rhs: IRCServerInput) -> Bool{
     switch (lhs, rhs) {
     case (.ping, .ping):
         return true
-    case (.channelMessage(let lhsChannel, let lhsMessage),
-          .channelMessage(let rhsChannel, let rhsMessage)):
-        return lhsChannel == rhsChannel && lhsMessage == rhsMessage
+    case (.channelMessage(let lhsChannel, let lhsUser, let lhsMessage),
+          .channelMessage(let rhsChannel, let rhsUser, let rhsMessage)):
+        return lhsChannel == rhsChannel && lhsMessage == rhsMessage && lhsUser == rhsUser
     case (.serverMessage(let lhsServer, let lhsMessage),
           .serverMessage(let rhsServer, let rhsMessage)):
         return lhsServer == rhsServer && lhsMessage == rhsMessage

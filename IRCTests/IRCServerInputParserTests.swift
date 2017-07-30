@@ -19,19 +19,19 @@ class IRCServerInputParserTests: XCTestCase {
     
     func testServerMessage() {
         let input = IRCServerInputParser.parseServerMessage(":tolkien.freenode.net 001 mukman :Welcome to the freenode Internet Relay Chat Network mukman")
-        
+
         XCTAssertEqual(input, IRCServerInput.serverMessage(server: "tolkien.freenode.net", message: "Welcome to the freenode Internet Relay Chat Network mukman"))
     }
     
     func testChannelMessage() {
-        let input = IRCServerInputParser.parseServerMessage("PRIVMSG #clearlynotarealchannel :this is so cool")
+        let input = IRCServerInputParser.parseServerMessage(":sgoodwin!~sgoodwin@ip-213-127-113-249.ip.prioritytelecom.net PRIVMSG #clearlynotarealchannel :this is so cool")
         
-        XCTAssertEqual(input, IRCServerInput.channelMessage(channel: "clearlynotarealchannel", message: "this is so cool"))
+        XCTAssertEqual(input, IRCServerInput.channelMessage(channel: "clearlynotarealchannel", user: "sgoodwin", message: "this is so cool"))
     }
     
     func testJoinMessage() {
         let input = IRCServerInputParser.parseServerMessage(":mukman!~sgoodwin@188.202.247.233 JOIN #clearlyatestchannel\r\n")
-        
+
         XCTAssertEqual(input, IRCServerInput.joinMessage(user: "mukman", channel: "clearlyatestchannel"))
     }
 }
