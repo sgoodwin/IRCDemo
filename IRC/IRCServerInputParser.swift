@@ -31,6 +31,10 @@ struct IRCServerInputParser {
                     
                     return .channelMessage(channel: channel, user: user, message: message)
                 }
+            } else if rest.hasPrefix("JOIN") {
+                let user = source.components(separatedBy: "!")[0].trimmingCharacters(in: CharacterSet(charactersIn: ":"))
+                let channel = rest.substring(from: rest.index(message.startIndex, offsetBy: 5)).trimmingCharacters(in: CharacterSet(charactersIn: "# "))
+                return .joinMessage(user: user, channel: channel)
             } else{
                 let server = source.trimmingCharacters(in: CharacterSet(charactersIn: ": "))
                 let message = rest.components(separatedBy: ":")[1]
@@ -60,6 +64,8 @@ func ==(lhs: IRCServerInput, rhs: IRCServerInput) -> Bool{
     case (.serverMessage(let lhsServer, let lhsMessage),
           .serverMessage(let rhsServer, let rhsMessage)):
         return lhsServer == rhsServer && lhsMessage == rhsMessage
+    case (.joinMessage(let lhsUser, let lhsChannel), .joinMessage(let rhsUser, let rhsChannel)):
+        return lhsUser == rhsUser && lhsChannel == rhsChannel
     default:
         return false
     }
