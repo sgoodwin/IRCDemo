@@ -12,6 +12,8 @@
 		9B9C9F761F1EA61300AFE20B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B9C9F751F1EA61300AFE20B /* Assets.xcassets */; };
 		9B9C9F791F1EA61300AFE20B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B9C9F771F1EA61300AFE20B /* Main.storyboard */; };
 		9B9C9F901F1EA61300AFE20B /* IRCUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9C9F8F1F1EA61300AFE20B /* IRCUITests.swift */; };
+		9BA3DB5D1F3EEAFA00B93E2E /* IRC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3DB5C1F3EEAFA00B93E2E /* IRC.swift */; };
+		9BB23AC51F31A77400F1B747 /* IRCServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB23AC41F31A77400F1B747 /* IRCServerTests.swift */; };
 		9BE124B41F2331E400860C0A /* IRCServerInputParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE124B31F2331E400860C0A /* IRCServerInputParserTests.swift */; };
 		9BE124B61F233A5500860C0A /* IRCServerInputParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE124B51F233A5500860C0A /* IRCServerInputParser.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +48,8 @@
 		9B9C9F8B1F1EA61300AFE20B /* IRCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IRCUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B9C9F8F1F1EA61300AFE20B /* IRCUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCUITests.swift; sourceTree = "<group>"; };
 		9B9C9F911F1EA61300AFE20B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9BA3DB5C1F3EEAFA00B93E2E /* IRC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRC.swift; sourceTree = "<group>"; };
+		9BB23AC41F31A77400F1B747 /* IRCServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCServerTests.swift; sourceTree = "<group>"; };
 		9BE124B31F2331E400860C0A /* IRCServerInputParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCServerInputParserTests.swift; sourceTree = "<group>"; };
 		9BE124B51F233A5500860C0A /* IRCServerInputParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCServerInputParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,6 +109,7 @@
 				9B9C9F7B1F1EA61300AFE20B /* IRC.entitlements */,
 				9B9C9F7A1F1EA61300AFE20B /* Info.plist */,
 				9BE124B51F233A5500860C0A /* IRCServerInputParser.swift */,
+				9BA3DB5C1F3EEAFA00B93E2E /* IRC.swift */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -114,6 +119,7 @@
 			children = (
 				9B9C9F861F1EA61300AFE20B /* Info.plist */,
 				9BE124B31F2331E400860C0A /* IRCServerInputParserTests.swift */,
+				9BB23AC41F31A77400F1B747 /* IRCServerTests.swift */,
 			);
 			path = IRCTests;
 			sourceTree = "<group>";
@@ -261,6 +267,7 @@
 			files = (
 				9B9C9F741F1EA61300AFE20B /* ViewController.swift in Sources */,
 				9BE124B61F233A5500860C0A /* IRCServerInputParser.swift in Sources */,
+				9BA3DB5D1F3EEAFA00B93E2E /* IRC.swift in Sources */,
 				9B9C9F721F1EA61300AFE20B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BE124B41F2331E400860C0A /* IRCServerInputParserTests.swift in Sources */,
+				9BB23AC51F31A77400F1B747 /* IRCServerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

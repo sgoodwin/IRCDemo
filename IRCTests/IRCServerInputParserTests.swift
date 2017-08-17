@@ -34,4 +34,10 @@ class IRCServerInputParserTests: XCTestCase {
 
         XCTAssertEqual(input, IRCServerInput.joinMessage(user: "mukman", channel: "clearlyatestchannel"))
     }
+    
+    func testUserListMessage() {
+        let input = IRCServerInputParser.parseServerMessage(":development.irc.roundwallsoftware.com 353 mukman = #clearlyafakechannel :mukman @sgoodwin\r\n:development.irc.roundwallsoftware.com 366 mukman #clearlyafakechannel :End of /NAMES list.")
+        
+        XCTAssertEqual(input, IRCServerInput.userList(channel: "clearlyafakechannel", users: ["mukman"]))
+    }
 }

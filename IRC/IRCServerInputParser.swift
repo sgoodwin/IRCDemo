@@ -37,8 +37,33 @@ struct IRCServerInputParser {
                 return .joinMessage(user: user, channel: channel)
             } else{
                 let server = source.trimmingCharacters(in: CharacterSet(charactersIn: ": "))
-                let message = rest.components(separatedBy: ":")[1]
-                return .serverMessage(server: server, message: message)
+                
+                // :development.irc.roundwallsoftware.com 353 mukman = #clearlyafakechannel :mukman @sgoodwin\r\n:development.irc.roundwallsoftware.com 366 mukman #clearlyafakechannel :End of /NAMES list.
+                
+                if rest.hasSuffix(":End of /NAMES list.") {
+                    let scanner = Scanner(string: rest)
+                    scanner.scanUpTo("#", into: nil)
+                    
+                    var channel: NSString?
+                    
+                    scanner.scanUpTo(" ", into: &channel)
+                    
+                    let channelName = (channel as String?)!.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+                    
+                    var users = [String]()
+                    var user: NSString?
+                    scanner.scanUpTo(" ", into: &user)
+                    users.append((user as String?)!.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
+                    
+                    return .userList(channel: channelName, users: users)
+                }
+                
+                if rest.contains(":") {
+                    let serverMessage = rest.components(separatedBy: ":")[1]
+                    return .serverMessage(server: server, message: serverMessage)
+                } else {
+                    return .serverMessage(server: server, message: rest)
+                }
             }
         }
         
@@ -52,6 +77,7 @@ enum IRCServerInput: Equatable {
     case serverMessage(server: String, message: String)
     case channelMessage(channel: String, user: String, message: String)
     case joinMessage(user: String, channel: String)
+    case userList(channel: String, users: [String])
 }
 
 func ==(lhs: IRCServerInput, rhs: IRCServerInput) -> Bool{
@@ -66,6 +92,8 @@ func ==(lhs: IRCServerInput, rhs: IRCServerInput) -> Bool{
         return lhsServer == rhsServer && lhsMessage == rhsMessage
     case (.joinMessage(let lhsUser, let lhsChannel), .joinMessage(let rhsUser, let rhsChannel)):
         return lhsUser == rhsUser && lhsChannel == rhsChannel
+    case (.userList(let lhsChannel, let lhsUsers), .userList(let rhsChannel, let rhsUsers)):
+        return lhsChannel == rhsChannel && lhsUsers == rhsUsers
     default:
         return false
     }

@@ -8,65 +8,26 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NSTextFieldDelegate {
+class ViewController: NSViewController, NSTextFieldDelegate, URLSessionDelegate, IRCServerDelegate {
 
-    let session = URLSession.shared
-    var task: URLSessionStreamTask!
-    
-    private func send(_ message: String) {
-        print("queing message \(message)")
-        task.write((message + "\r\n").data(using: .utf8)!, timeout: 0) { (error) in
-            if let error = error {
-                print("Failed to send: \(String(describing: error))")
-            } else {
-                print("Sent!")
-            }
-        }
-    }
-    
-    private func read() {
-        task.readData(ofMinLength: 0, maxLength: 9999, timeout: 0) { (data, atEOF, error) in
-            if atEOF {
-                print("Connection's done!")
-                return
-            }
-            
-            guard let data = data, let message = String(data: data, encoding: .utf8) else {
-                print("No data!")
-                return
-            }
-            
-            print(message)
-            
-            let input = IRCServerInputParser.parseServerMessage(message)
-            switch input {
-                
-            case .unknown(let raw):
-                print("Unknown message! \(raw)")
-            case .ping:
-                self.send("PONG")
-            case .serverMessage(_, let message):
-                print(message)
-            case .channelMessage(let channel, let user, let message):
-                print("\(user)@\(channel): \(message)")
-            case .joinMessage(let user, let channel):
-                print("\(user) joined \(channel)")
-            }
-            
-            self.read()
-        }
-    }
+    var server: IRCServer? = nil
     
     @IBAction func connect(_ sender: Any) {
-        task = session.streamTask(withHostName: "irc.freenode.org", port: 6667)
-        task.resume()
-        read()
-        send("NICK mukman")
-        send("USER sgoodwin 0 * :Samuel Goodwin")
+        let user = IRCUser(username: "sgoodwin", realName: "Samuel Goodwin", nick: "mukman")
+        server = IRCServer.connect("127.0.0.1", port: 6667, user: user)
+        server?.delegate = self
+    }
+    
+    func didRecieveMessage(_ server: IRCServer, message: String) {
+        print(message)
     }
     
     @IBAction func userTyped(_ sender: NSTextField) {
-        send(sender.stringValue)
+        server?.send(sender.stringValue)
+    }
+    
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        print("Session error: \(error)")
     }
 }
 
