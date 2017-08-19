@@ -10,7 +10,7 @@ import Foundation
 
 struct IRCServerInputParser {
     static func parseServerMessage(_ message: String) -> IRCServerInput {
-        if message == "PING" {
+        if message.hasPrefix("PING") {
             return .ping
         }
         

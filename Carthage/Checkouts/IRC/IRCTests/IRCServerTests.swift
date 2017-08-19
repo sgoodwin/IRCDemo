@@ -10,16 +10,10 @@ import XCTest
 @testable import IRC
 
 class IRCServerTests: XCTestCase {
-    
-    var fakeSession: URLSession = {
-        let configuration = URLSessionConfiguration.default
-        return URLSession(configuration: configuration)
-    }()
-    
     func testServerDelegateGetsServerMessages() {
         
         let user = IRCUser(username: "sgoodwin", realName: "Samuel Goodwin", nick: "mukman")
-        let server = IRCServer.connect("127.0.0.1", port: 6667, user: user, session: fakeSession)
+        let server = IRCServer.connect("127.0.0.1", port: 6667, user: user)
         
         class ServerDelegate: IRCServerDelegate {
             let expectation = XCTestExpectation(description: "Any message receieved")
@@ -38,7 +32,7 @@ class IRCServerTests: XCTestCase {
     
     func testJoiningAChannel() {
         let user = IRCUser(username: "sgoodwin", realName: "Samuel Goodwin", nick: "mukman")
-        let server = IRCServer.connect("127.0.0.1", port: 6667, user: user, session: fakeSession)
+        let server = IRCServer.connect("127.0.0.1", port: 6667, user: user)
         
         let channel = server.join("clearlyafakechannel")
         
@@ -54,5 +48,23 @@ class IRCServerTests: XCTestCase {
         channel.delegate = channelDelegate
         
         wait(for: [channelDelegate.expectation], timeout: 1.0)
+    }
+    
+    func testSendingAChannelMessage() {
+        class MockServer: IRCServer {
+            var sentMessage: String?
+            
+            override func send(_ message: String) {
+                sentMessage = message
+            }
+        }
+        
+        let user = IRCUser(username: "sgoodwin", realName: "Samuel Goodwin", nick: "mukman")
+        let server = MockServer.connect("127.0.0.1", port: 6667, user: user)
+        
+        let channel = server.join("clearlyafakechannel")
+        channel.send("hey sup")
+        
+        XCTAssertEqual(server.sentMessage, "PRIVMSG #clearlyafakechannel :hey sup")
     }
 }

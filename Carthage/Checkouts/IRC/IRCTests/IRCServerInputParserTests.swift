@@ -12,7 +12,7 @@ import XCTest
 class IRCServerInputParserTests: XCTestCase {
     
     func testPingMessage() {
-        let input = IRCServerInputParser.parseServerMessage("PING")
+        let input = IRCServerInputParser.parseServerMessage("PING :development.irc.roundwallsoftware.com")
         
         XCTAssertEqual(input, .ping)
     }
